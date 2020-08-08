@@ -16,6 +16,8 @@ from common.utils import lazyproperty
 from orgs.mixins.models import OrgModelMixin, OrgManager
 from .base import ConnectivityMixin
 from .utils import Connectivity
+from ..fields import AssetNodeManyToManyDescriptor
+
 
 __all__ = ['Asset', 'ProtocolsMixin', 'Platform']
 logger = logging.getLogger(__name__)
@@ -383,3 +385,5 @@ class Asset(ProtocolsMixin, NodesRelationMixin, OrgModelMixin):
             except IntegrityError:
                 print('Error continue')
                 continue
+
+setattr(Asset, 'nodes', AssetNodeManyToManyDescriptor(Asset.nodes.rel, reverse=Asset.nodes.reverse))
