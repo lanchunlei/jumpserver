@@ -9,6 +9,7 @@ from functools import reduce
 from collections import OrderedDict
 
 from django.db import models
+from django.db.models.fields.related import lazy_related_operation
 from django.utils.translation import ugettext_lazy as _
 
 from common.fields.model import JsonDictTextField
@@ -386,4 +387,13 @@ class Asset(ProtocolsMixin, NodesRelationMixin, OrgModelMixin):
                 print('Error continue')
                 continue
 
+
 setattr(Asset, 'nodes', AssetNodeManyToManyDescriptor(Asset.nodes.rel, reverse=Asset.nodes.reverse))
+
+
+def set_assets_on_node(_, node_model):
+    setattr(node_model, 'nodes',
+            AssetNodeManyToManyDescriptor(
+                node_model.assets.rel,
+                reverse=node_model.assets.reverse
+            ))
